@@ -33,9 +33,11 @@ function NewsPage() {
 
 const [articles, setArticles] = useState<Element[]>([])
     useEffect(() => {
+        //not using yet, having cors problems and many rss 
+        // just don't give full articles
         const rssLink = langCtx.selectedLang === 'spanish' ? rssLinks[0].link : rssLinks[1].link
         async function getArticles() {
-            const req = await fetch(rssLink)
+            const req = await fetch('https://oglobo.globo.com/rss.xml?completo=true')
             const res = await req.text()
             const data = new window.DOMParser().parseFromString(res, 'text/xml')
             return data

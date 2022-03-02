@@ -1,1 +1,1 @@
-An ongoing language learning app build with Next.js, Redux, and whatever I choose soon for styling
+An ongoing language learning app build with React, Redux, and Tailwind
