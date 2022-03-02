@@ -1,10 +1,9 @@
-import { Route, Routes } from "react-router-dom";
-import NewsPage from "./ArticlesPage/NewsPage";
-import Header from "./components/Header";
-import Sidebar from "./components/Sidebar";
+import Header from "./Header"
+import Sidebar from "./Sidebar"
 
-const App: React.FC = () => {
-  return (
+const PageWrapper: React.FC = (props) => {
+
+    return (
     <div className='h-screen flex flex-col bg-slate-200'>
       <Header />
       <main className='h-full w-screen flex 
@@ -13,14 +12,12 @@ const App: React.FC = () => {
         <section className="h-full w-full 
         overflow-y-scroll overflow-x-hidden">
           <div className="h-full w-[95%] mx-auto">
-            <Routes>
-              <Route element={<NewsPage />} path='/articles' />
-            </Routes>
+            {props.children}
           </div>
         </section>
       </main>
     </div>
-  );
+    )
 }
 
-export default App;
+export default PageWrapper
