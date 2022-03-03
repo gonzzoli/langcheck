@@ -3,6 +3,7 @@ import NoteCard from "./NoteCard"
 
 
 const NotesTile: React.FC<{notes: Note[]}> = (props) => {
+    
     return (
         <div className="flex 
         flex-col shrink-0

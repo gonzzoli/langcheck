@@ -2,7 +2,7 @@ import { useRef, useState } from "react"
 import { Note } from "./NotesPage"
 
 
-const NoteForm: React.FC<{onCloseModal: ()=>void}> = (props) => {
+const NoteForm: React.FC<{noteData?: Note,onCloseModal: ()=>void}> = (props) => {
     const titleRef = useRef<HTMLInputElement>(null)
     const bodyRef = useRef<HTMLTextAreaElement>(null)
     const [showError, setShowError] = useState(false)
@@ -14,7 +14,8 @@ const NoteForm: React.FC<{onCloseModal: ()=>void}> = (props) => {
         }
 
         const notesData: Note[] = JSON.parse(localStorage.getItem('notesArray') || '[]')
-        const nextId = notesData.map((note: Note) => note.id).sort((a:number,b:number)=>a-b)[0]+1
+        const nextId = (Math.max(...notesData.map((note: Note) => note.id), 0))+1
+        
         notesData.push({
             id: nextId, 
             title: titleRef.current!.value, 

@@ -1,3 +1,5 @@
+import { useEffect, useState } from "react"
+import NoteForm from "./NoteForm"
 import NotesTile from "./NotesTile/NotesTile"
 
 export type Note = {
@@ -6,42 +8,45 @@ title: string,
 body: string
 }
 
-const dummyNotes: Note[] = [
-    {
-        id: 1,
-        title: 'Lo que hice ayer',
-        body: `Ayer me desperte como a las 7 de la mañana y me levante de la cama saltando, porque era un gran dia sin dudas. Fui al baño, comi una banana y sali a correr. 
-        Cuando volvi me bañe y dije, buena que onda las noticias re loco todo lo de ucrania y aparte como iba a saber yo que tenia que cocinar todo un festin para cuando llegara mi familia y lorem ipsummasdas. `
-    },
-    {
-        id: 2,
-        title: 'Lo que pienso hacer mañana',
-        body: `Ayer me desperte como a las 7 de la mañana y me levante de la cama saltando, porque era un gran dia sin dudas. Fui al baño, comi una banana y sali a correr. 
-        Cuando volvi me bañe y dije, buena que ondaCuando volvi me bañe y dije, buena que onda las noticias
-        Cuando volvi me bañe y dije, buena que onda las noticias las noticias re loco todo lo de ucrania y aparte como iba a saber yo que tenia que cocinar todo un festin para cuando llegara mi familia y lorem ipsummasdas. `
-    },
-    {
-        id: 3,
-        title: 'tatat atata ice ayer',
-        body: `Ayer a y me levante de la cama saltando, porque era un gran dia sin dudas. Fui al baño, comi una banana y sali a correr. 
-        Cuando volvi me bañe y dije, buena que onda las noticias re loco todo lo de ucrania y aparte como iba a saber yo que tenia que cocinar todo un festin para cuando llegara mi familia y lorem ipsummasdas. `
-    },
-]
-
-const NotesPage: React.FC<{onShowModal: (modalName: string) => void}> = (props) => {
+const NotesPage: React.FC = (props) => {
     const notesData: Note[] = JSON.parse(localStorage.getItem('notesArray') || '[]')
-    
-    function showModal() {
-        props.onShowModal('NoteForm')
+    const [screenWidth, setScreenWidth] = useState(window.innerWidth)
+    const [showForm, setShowForm] = useState(false)
+
+    useEffect(() => {
+        // As this triggers a re-render on each resize, each NewsCard
+        // calculates the text height again, causing some extra calculations
+        // not expensive anyways, but not the best visuals when resizing.
+        // You can see the text resizing a lot.
+        function updateWidth() {
+            setScreenWidth(window.innerWidth)
+        }
+        window.addEventListener('resize', updateWidth)
+        return () => {
+            window.removeEventListener('resize', updateWidth)
+        }
+    }, [])
+
+    function openForm() {
+        setShowForm(true)
+    }
+
+    function closeForm() {
+        setShowForm(false)
     }
 
     return (
     <>
-        <h1 className="text-center text-2xl mt-5">Notas y escritura</h1>
+    {showForm && <div className="absolute top-0 left-0 w-full h-full
+        bg-black bg-opacity-60 flex justify-center items-center">
+        <NoteForm onCloseModal={closeForm} />
+    </div>}
+    <div className="px-[5%]">
+        <h1 className="text-center text-2xl pt-5">Notas y escritura</h1>
         <div className="grid grid-cols-2 gap-8 mt-5">
             <div className="flex justify-end">
                 <button
-                onClick={showModal}
+                onClick={openForm}
                 className="py-1 px-5 bg-light-orange rounded-md
                 font-bold hover:bg-orange transition-all"
                 >+ Nueva Nota</button>
@@ -55,10 +60,26 @@ const NotesPage: React.FC<{onShowModal: (modalName: string) => void}> = (props) 
         </div>
         <div className="w-full flex gap-8 px-8 mt-5
         justify-center">
-            <NotesTile notes={notesData} />
-            <NotesTile notes={notesData} />
-            <NotesTile notes={notesData} />
+            {screenWidth > 764 && 
+                <>
+                <NotesTile notes={notesData} />
+                <NotesTile notes={notesData} />
+                <NotesTile notes={notesData} />
+                </>
+            }
+            {(screenWidth > 550 && screenWidth <= 764) && 
+                <>
+                <NotesTile notes={notesData} />
+                <NotesTile notes={notesData} />
+                </>
+            }
+            {(screenWidth <= 550) && 
+                <>
+                <NotesTile notes={notesData} />
+                </>
+            }
         </div>
+    </div>
     </>
     )
 }

@@ -54,7 +54,7 @@ const [articles, setArticles] = useState<Element[]>([])
     <>
         <h1 className="text-center text-2xl mt-5">Noticias y articulos</h1>
         <div className="w-full flex gap-8 px-8 mt-5
-        justify-center">
+        justify-center relative">
             {screenWidth > 764 && 
                 <>
                 <NewsTile articles={articles.slice(0, 2)} />
