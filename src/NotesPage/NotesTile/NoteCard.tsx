@@ -1,10 +1,13 @@
 import { Note } from "../NotesPage"
 
 
-const NoteCard: React.FC<{noteData: Note}> = (props) => {
-
-    function openNote() {
+const NoteCard: React.FC<{
+    noteData: Note, 
+    onOpenNote: (noteData: Note) => void
+    }> = (props) => {
         
+    function openNote() {
+        props.onOpenNote(props.noteData)
     }
 
     return (

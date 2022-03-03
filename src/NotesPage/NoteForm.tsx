@@ -1,8 +1,8 @@
-import { useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { Note } from "./NotesPage"
 
 
-const NoteForm: React.FC<{noteData?: Note,onCloseModal: ()=>void}> = (props) => {
+const NoteForm: React.FC<{noteData: Note | undefined, onCloseModal: ()=>void}> = (props) => {
     const titleRef = useRef<HTMLInputElement>(null)
     const bodyRef = useRef<HTMLTextAreaElement>(null)
     const [showError, setShowError] = useState(false)
@@ -28,7 +28,16 @@ const NoteForm: React.FC<{noteData?: Note,onCloseModal: ()=>void}> = (props) => 
     function checkTitle() {
         if(titleRef.current?.value.length === 0) return
         setShowError(false)
-        
+    }
+    useEffect(() => {
+        console.log(props.noteData)
+        if(props.noteData) {
+            titleRef.current!.value = props.noteData.title
+            bodyRef.current!.value = props.noteData.body
+        }
+    }, [])
+    function openNote() {
+        console.log()
     }
 
     return (

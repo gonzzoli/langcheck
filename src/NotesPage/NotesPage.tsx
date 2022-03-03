@@ -9,6 +9,9 @@ body: string
 }
 
 const NotesPage: React.FC = (props) => {
+    //variable used when opening the form from a note, and not 
+    // to create a new one
+    let noteFormData: Note | undefined
     const notesData: Note[] = JSON.parse(localStorage.getItem('notesArray') || '[]')
     const [screenWidth, setScreenWidth] = useState(window.innerWidth)
     const [showForm, setShowForm] = useState(false)
@@ -31,15 +34,21 @@ const NotesPage: React.FC = (props) => {
         setShowForm(true)
     }
 
+    function openFormFromNote(noteData: Note) {
+        noteFormData = {...noteData}
+        console.log(noteFormData)
+        setShowForm(true)
+    }
+
     function closeForm() {
         setShowForm(false)
     }
 
     return (
     <>
-    {showForm && <div className="absolute top-0 left-0 w-full h-full
+    {showForm && <div className="absolute z-10 top-0 left-0 w-full h-full
         bg-black bg-opacity-60 flex justify-center items-center">
-        <NoteForm onCloseModal={closeForm} />
+        <NoteForm onCloseModal={closeForm} noteData={noteFormData} />
     </div>}
     <div className="px-[5%]">
         <h1 className="text-center text-2xl pt-5">Notas y escritura</h1>
@@ -62,20 +71,20 @@ const NotesPage: React.FC = (props) => {
         justify-center">
             {screenWidth > 764 && 
                 <>
-                <NotesTile notes={notesData} />
-                <NotesTile notes={notesData} />
-                <NotesTile notes={notesData} />
+                <NotesTile onOpenNote={openFormFromNote} notes={notesData} />
+                <NotesTile onOpenNote={openFormFromNote} notes={notesData} />
+                <NotesTile onOpenNote={openFormFromNote} notes={notesData} />
                 </>
             }
             {(screenWidth > 550 && screenWidth <= 764) && 
                 <>
-                <NotesTile notes={notesData} />
-                <NotesTile notes={notesData} />
+                <NotesTile onOpenNote={openFormFromNote} notes={notesData} />
+                <NotesTile onOpenNote={openFormFromNote} notes={notesData} />
                 </>
             }
             {(screenWidth <= 550) && 
                 <>
-                <NotesTile notes={notesData} />
+                <NotesTile onOpenNote={openFormFromNote} notes={notesData} />
                 </>
             }
         </div>
