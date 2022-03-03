@@ -1,4 +1,3 @@
-import { createPortal } from "react-dom"
 import NotesTile from "./NotesTile/NotesTile"
 
 export type Note = {
@@ -30,6 +29,8 @@ const dummyNotes: Note[] = [
 ]
 
 const NotesPage: React.FC<{onShowModal: (modalName: string) => void}> = (props) => {
+    const notesData: Note[] = JSON.parse(localStorage.getItem('notesArray') || '[]')
+    
     function showModal() {
         props.onShowModal('NoteForm')
     }
@@ -54,9 +55,9 @@ const NotesPage: React.FC<{onShowModal: (modalName: string) => void}> = (props) 
         </div>
         <div className="w-full flex gap-8 px-8 mt-5
         justify-center">
-            <NotesTile notes={dummyNotes} />
-            <NotesTile notes={dummyNotes} />
-            <NotesTile notes={dummyNotes} />
+            <NotesTile notes={notesData} />
+            <NotesTile notes={notesData} />
+            <NotesTile notes={notesData} />
         </div>
     </>
     )

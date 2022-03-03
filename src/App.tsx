@@ -6,15 +6,16 @@ import Sidebar from "./components/Sidebar";
 import NoteForm from "./NotesPage/NoteForm";
 import NotesPage from "./NotesPage/NotesPage";
 
-const modals = [
-  {
-    name: 'NoteForm',
-    component: <NoteForm />
-  }
-]
 
 const App: React.FC = () => {
   const [modalShowing, setModalShowing] = useState('')
+
+  const modals = [
+    {
+      name: 'NoteForm',
+      component: <NoteForm onCloseModal={closeModal} />
+    }
+  ]
 
   function showModal(modalName: string) {
     setModalShowing(modalName)
@@ -22,6 +23,7 @@ const App: React.FC = () => {
 
   function closeModal() {
     setModalShowing('')
+    console.log('caca')
   }
   
   return (
