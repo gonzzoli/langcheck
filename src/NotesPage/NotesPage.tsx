@@ -10,10 +10,11 @@ body: string
 
 const NotesPage: React.FC = (props) => {
     const blurRef= useRef<HTMLDivElement>(null)
+    const searchInputRef = useRef<HTMLInputElement>(null)
     //variable used when opening the form from a note, and not 
     // to create a new one
     const [noteFormData, setNoteFormData] = useState<Note|undefined>(undefined)
-    const notesData: Note[] = JSON.parse(localStorage.getItem('notesArray') || '[]')
+    const [notesData, setNotesData]= useState<Note[]>(JSON.parse(localStorage.getItem('notesArray') || '[]'))
     const [screenWidth, setScreenWidth] = useState(window.innerWidth)
     const [showForm, setShowForm] = useState(false)
 
@@ -31,6 +32,10 @@ const NotesPage: React.FC = (props) => {
         }
     }, [])
 
+    useEffect(() => {
+        localStorage.setItem('notesArray', JSON.stringify(notesData))
+    }, [notesData])
+
     function openForm() {
         setNoteFormData(undefined)
         setShowForm(true)
@@ -41,12 +46,38 @@ const NotesPage: React.FC = (props) => {
         setShowForm(true)
     }
 
-    function closeForm() {
+    function editNote(editedNote: Note) {
+        setNotesData(prevNotes => {
+            const noteIndex = prevNotes.findIndex(note => note.id === editedNote.id)
+            prevNotes.splice(noteIndex, 1, editedNote)
+            return prevNotes
+        })
+        setShowForm(false)
+    }
+
+    function addNote(title: string, body: string) {
+        const nextId = (Math.max(...notesData.map((note: Note) => note.id), 0))+1
+        setNotesData(prevNotes => prevNotes.concat({
+            id:nextId,
+            title,
+            body
+        }))
+        setShowForm(false)
+    }
+
+    function deleteNote(id: number) {
+        setNotesData(prevNotes => prevNotes.filter(note => note.id !== id))
         setShowForm(false)
     }
 
     function checkModalBlur(e: React.MouseEvent<HTMLDivElement>) {
-        if(e.target === blurRef.current) closeForm()
+        if(e.target === blurRef.current) setShowForm(false)
+    }
+
+    function searchNotes() {
+        if(searchInputRef.current?.value === '') {
+            
+        }
     }
 
     return (
@@ -54,7 +85,11 @@ const NotesPage: React.FC = (props) => {
     {showForm && <div onClick={checkModalBlur} ref={blurRef}
     className="absolute z-10 top-0 left-0 w-full h-full
         bg-black bg-opacity-60 flex justify-center items-center">
-        <NoteForm onCloseModal={closeForm} noteData={noteFormData} />
+        <NoteForm 
+        onDeleteNote={deleteNote}
+        onAddNote={addNote}
+        onEditNote={editNote}
+        noteFormData={noteFormData} />
     </div>}
     <div className="px-[3%]">
         <h1 className="text-center text-2xl pt-5">Notas y escritura</h1>
@@ -68,6 +103,8 @@ const NotesPage: React.FC = (props) => {
             </div>
             <div>
                 <input 
+                ref={searchInputRef}
+                onChange={searchNotes}
                 className="py-1 px-3 transition-all w-40 rounded-md outline-none 
                 border-b-2  focus:border-black focus:w-56"
                 placeholder="Buscar..." />
