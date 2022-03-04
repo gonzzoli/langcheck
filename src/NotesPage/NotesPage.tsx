@@ -11,7 +11,7 @@ body: string
 const NotesPage: React.FC = (props) => {
     //variable used when opening the form from a note, and not 
     // to create a new one
-    let noteFormData: Note | undefined
+    const [noteFormData, setNoteFormData] = useState<Note|undefined>(undefined)
     const notesData: Note[] = JSON.parse(localStorage.getItem('notesArray') || '[]')
     const [screenWidth, setScreenWidth] = useState(window.innerWidth)
     const [showForm, setShowForm] = useState(false)
@@ -35,7 +35,7 @@ const NotesPage: React.FC = (props) => {
     }
 
     function openFormFromNote(noteData: Note) {
-        noteFormData = {...noteData}
+        setNoteFormData(noteData)
         console.log(noteFormData)
         setShowForm(true)
     }
@@ -50,7 +50,7 @@ const NotesPage: React.FC = (props) => {
         bg-black bg-opacity-60 flex justify-center items-center">
         <NoteForm onCloseModal={closeForm} noteData={noteFormData} />
     </div>}
-    <div className="px-[5%]">
+    <div className="px-[3%]">
         <h1 className="text-center text-2xl pt-5">Notas y escritura</h1>
         <div className="grid grid-cols-2 gap-8 mt-5">
             <div className="flex justify-end">

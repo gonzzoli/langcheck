@@ -52,27 +52,29 @@ const [articles, setArticles] = useState<Element[]>([])
 
     return (
     <>
-        <h1 className="text-center text-2xl mt-5">Noticias y articulos</h1>
-        <div className="w-full flex gap-8 px-8 mt-5
-        justify-center relative">
-            {screenWidth > 764 && 
-                <>
-                <NewsTile articles={articles.slice(0, 2)} />
-                <NewsTile articles={articles.slice(3, 5)} />
-                <NewsTile articles={articles.slice(6, 9)} />
-                </>
-            }
-            {(screenWidth > 550 && screenWidth <= 764) && 
-                <>
-                <NewsTile articles={articles.slice(0, 4)} />
-                <NewsTile articles={articles.slice(5, 9)} />
-                </>
-            }
-            {(screenWidth <= 550) && 
-                <>
-                <NewsTile articles={articles.slice(0, 9)} />
-                </>
-            }
+        <div className="px-[3%]">
+            <h1 className="text-center text-2xl mt-5">Noticias y articulos</h1>
+            <div className="w-full flex gap-8 px-8 mt-5
+            justify-center relative">
+                {screenWidth > 764 && 
+                    <>
+                    <NewsTile articles={articles.slice(0, 2)} />
+                    <NewsTile articles={articles.slice(3, 5)} />
+                    <NewsTile articles={articles.slice(6, 9)} />
+                    </>
+                }
+                {(screenWidth > 550 && screenWidth <= 764) && 
+                    <>
+                    <NewsTile articles={articles.slice(0, 4)} />
+                    <NewsTile articles={articles.slice(5, 9)} />
+                    </>
+                }
+                {(screenWidth <= 550) && 
+                    <>
+                    <NewsTile articles={articles.slice(0, 9)} />
+                    </>
+                }
+            </div>
         </div>
     </>
     )
