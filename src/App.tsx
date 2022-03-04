@@ -15,12 +15,10 @@ const App: React.FC = () => {
         <Sidebar />
         <section className="h-full w-full 
         overflow-y-scroll overflow-x-hidden relative">
-          <div className="h-full w-full mx-auto">
             <Routes>
               <Route element={<NewsPage />} path='/articles' />
               <Route element={<NotesPage />} path='/notes' />
             </Routes>
-          </div>
         </section>
       </main>
     </div>

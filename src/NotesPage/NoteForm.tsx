@@ -35,10 +35,16 @@ const NoteForm: React.FC<{noteData: Note | undefined, onCloseModal: ()=>void}> =
         if(titleRef.current?.value.length === 0) return
         setShowError(false)
     }
+
+    function deleteNote() {
+        const notesData: Note[] = JSON.parse(localStorage.getItem('notesArray') || '[]')
+        const filteredNotes = notesData.filter(note => note.id !== props.noteData!.id)
+        localStorage.setItem('notesArray', JSON.stringify(filteredNotes))
+        props.onCloseModal()
+    }
+
     useEffect(() => {
         if(props.noteData) {
-            console.log('caca')
-            console.log(props.noteData)
             titleRef.current!.value = props.noteData.title
             bodyRef.current!.value = props.noteData.body
         }
@@ -67,11 +73,11 @@ const NoteForm: React.FC<{noteData: Note | undefined, onCloseModal: ()=>void}> =
             h-80"
             placeholder="Tu nota..." />
             <div className="flex justify-between items-center">
-                <button
-                onClick={props.onCloseModal}
+                {props.noteData && <button
+                onClick={deleteNote}
                 className="py-1 px-4 text-red-600 bg-red-100
                 hover:bg-red-200 transition-all rounded-md mt-2 ml-0">
-                Cancelar</button>
+                Eliminar</button> }
                 <button
                 onClick={saveNote}
                 className="py-1 px-4 bg-light-orange

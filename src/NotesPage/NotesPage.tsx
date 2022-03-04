@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import NoteForm from "./NoteForm"
 import NotesTile from "./NotesTile/NotesTile"
 
@@ -9,6 +9,7 @@ body: string
 }
 
 const NotesPage: React.FC = (props) => {
+    const blurRef= useRef<HTMLDivElement>(null)
     //variable used when opening the form from a note, and not 
     // to create a new one
     const [noteFormData, setNoteFormData] = useState<Note|undefined>(undefined)
@@ -44,9 +45,14 @@ const NotesPage: React.FC = (props) => {
         setShowForm(false)
     }
 
+    function checkModalBlur(e: React.MouseEvent<HTMLDivElement>) {
+        if(e.target === blurRef.current) closeForm()
+    }
+
     return (
     <>
-    {showForm && <div className="absolute z-10 top-0 left-0 w-full h-full
+    {showForm && <div onClick={checkModalBlur} ref={blurRef}
+    className="absolute z-10 top-0 left-0 w-full h-full
         bg-black bg-opacity-60 flex justify-center items-center">
         <NoteForm onCloseModal={closeForm} noteData={noteFormData} />
     </div>}
