@@ -14,13 +14,19 @@ const NoteForm: React.FC<{noteData: Note | undefined, onCloseModal: ()=>void}> =
         }
 
         const notesData: Note[] = JSON.parse(localStorage.getItem('notesArray') || '[]')
-        const nextId = (Math.max(...notesData.map((note: Note) => note.id), 0))+1
+        if(props.noteData) {
+            const openedNote = notesData.find(note => note.id === props.noteData!.id)
+            openedNote!.title = titleRef.current!.value
+            openedNote!.body = bodyRef.current!.value
+        } else {
+            const nextId = (Math.max(...notesData.map((note: Note) => note.id), 0))+1
+            notesData.push({
+                id: nextId, 
+                title: titleRef.current!.value, 
+                body: bodyRef.current!.value
+            })
+        }
         
-        notesData.push({
-            id: nextId, 
-            title: titleRef.current!.value, 
-            body: bodyRef.current!.value
-        })
         localStorage.setItem('notesArray', JSON.stringify(notesData))
         props.onCloseModal()
     }
@@ -30,15 +36,14 @@ const NoteForm: React.FC<{noteData: Note | undefined, onCloseModal: ()=>void}> =
         setShowError(false)
     }
     useEffect(() => {
-        console.log(props.noteData)
         if(props.noteData) {
+            console.log('caca')
+            console.log(props.noteData)
             titleRef.current!.value = props.noteData.title
             bodyRef.current!.value = props.noteData.body
         }
     }, [])
-    function openNote() {
-        console.log()
-    }
+
 
     return (
         <div className="p-2 bg-white rounded-md w-2/3 max-w-xl">

@@ -31,12 +31,12 @@ const NotesPage: React.FC = (props) => {
     }, [])
 
     function openForm() {
+        setNoteFormData(undefined)
         setShowForm(true)
     }
 
     function openFormFromNote(noteData: Note) {
         setNoteFormData(noteData)
-        console.log(noteFormData)
         setShowForm(true)
     }
 
@@ -63,7 +63,7 @@ const NotesPage: React.FC = (props) => {
             <div>
                 <input 
                 className="py-1 px-3 transition-all w-40 rounded-md outline-none 
-                focus:border-b-2 border-black focus:-mb-0.5 focus:w-56"
+                border-b-2  focus:border-black focus:w-56"
                 placeholder="Buscar..." />
             </div>
         </div>
