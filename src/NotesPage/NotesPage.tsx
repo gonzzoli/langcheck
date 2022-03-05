@@ -79,10 +79,13 @@ const NotesPage: React.FC = (props) => {
         if(e.target === blurRef.current) setShowForm(false)
     }
 
-    function filterNotes() {
-        if(searchInput==='') return notesData
-        return notesData.filter(note => 
-            note.title.includes(searchInput) || note.body.includes(searchInput) )
+    function filterNotes(colNumber: number, totalCols: number) {
+        // first filters the notes by the search input
+        const filteredSearchNotes = notesData.filter(note => note.title.includes(searchInput) || note.body.includes(searchInput))
+        // then filter the notes by the column they are being sent
+        return filteredSearchNotes.filter((note, index) => {
+            return (index - colNumber) % totalCols === 0
+        })
     }
 
     return (
@@ -119,20 +122,20 @@ const NotesPage: React.FC = (props) => {
         justify-center">
             {screenWidth > 764 && 
                 <>
-                <NotesTile onOpenNote={openFormFromNote} notes={filterNotes()} />
-                <NotesTile onOpenNote={openFormFromNote} notes={filterNotes()} />
-                <NotesTile onOpenNote={openFormFromNote} notes={filterNotes()} />
+                <NotesTile onOpenNote={openFormFromNote} notes={filterNotes(0, 3)} />
+                <NotesTile onOpenNote={openFormFromNote} notes={filterNotes(1, 3)} />
+                <NotesTile onOpenNote={openFormFromNote} notes={filterNotes(2, 3)} />
                 </>
             }
             {(screenWidth > 550 && screenWidth <= 764) && 
                 <>
-                <NotesTile onOpenNote={openFormFromNote} notes={filterNotes()} />
-                <NotesTile onOpenNote={openFormFromNote} notes={filterNotes()} />
+                <NotesTile onOpenNote={openFormFromNote} notes={filterNotes(0, 2)} />
+                <NotesTile onOpenNote={openFormFromNote} notes={filterNotes(1, 2)} />
                 </>
             }
             {(screenWidth <= 550) && 
                 <>
-                <NotesTile onOpenNote={openFormFromNote} notes={filterNotes()} />
+                <NotesTile onOpenNote={openFormFromNote} notes={filterNotes(0, 1)} />
                 </>
             }
         </div>
