@@ -120,7 +120,15 @@ const NotesPage: React.FC = (props) => {
         </div>
         <div className="w-full flex gap-8 px-8 mt-5
         justify-center">
-            {screenWidth > 764 && 
+            {screenWidth > 950 && 
+                <>
+                <NotesTile onOpenNote={openFormFromNote} notes={filterNotes(0, 4)} />
+                <NotesTile onOpenNote={openFormFromNote} notes={filterNotes(1, 4)} />
+                <NotesTile onOpenNote={openFormFromNote} notes={filterNotes(2, 4)} />
+                <NotesTile onOpenNote={openFormFromNote} notes={filterNotes(3, 4)} />
+                </>
+            }
+            {screenWidth > 764 && screenWidth <= 950 && 
                 <>
                 <NotesTile onOpenNote={openFormFromNote} notes={filterNotes(0, 3)} />
                 <NotesTile onOpenNote={openFormFromNote} notes={filterNotes(1, 3)} />

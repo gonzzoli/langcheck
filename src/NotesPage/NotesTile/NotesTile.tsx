@@ -14,7 +14,7 @@ const NotesTile: React.FC<{
     return (
         <div className="flex 
         flex-col shrink-0
-        gap-8 w-1/3 mdsm:w-1/2 sm:w-full">
+        gap-8 w-1/4 md:w-1/3 mdsm:w-1/2 sm:w-full">
             {props.notes.map(note => <NoteCard 
             key={note.id} noteData={note} onOpenNote={openNote} />)}
         </div>
