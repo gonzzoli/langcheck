@@ -13,34 +13,26 @@ const NoteForm: React.FC<{
     const [showError, setShowError] = useState(false)
 
     function saveNote() {
+        //checks if there's input on either field
         if(titleRef.current?.value === '' && bodyRef.current?.value === ''){
             setShowError(true)
             return
         }
 
-        // const notesData: Note[] = JSON.parse(localStorage.getItem('notesArray') || '[]')
         if(props.noteFormData) {
+            // if the form received noteFormData, then it can only be editing
+            // a note, else, it is adding a new one
             props.onEditNote({
                 id: props.noteFormData!.id,
                 title: titleRef.current!.value,
                 body: bodyRef.current!.value
             })
-            // const openedNote = notesData.find(note => note.id === props.noteFormData!.id)
-            // openedNote!.title = titleRef.current!.value
-            // openedNote!.body = bodyRef.current!.value
         } else {
             props.onAddNote(
                 titleRef.current!.value,
                 bodyRef.current!.value)
-            // const nextId = (Math.max(...notesData.map((note: Note) => note.id), 0))+1
-            // notesData.push({
-            //     id: nextId, 
-            //     title: titleRef.current!.value, 
-            //     body: bodyRef.current!.value
-            // })
         }
         
-        // localStorage.setItem('notesArray', JSON.stringify(notesData))
     }
 
     function checkTitle() {
@@ -50,14 +42,12 @@ const NoteForm: React.FC<{
 
     function deleteNote() {
         props.onDeleteNote(props.noteFormData!.id)
-        // const notesData: Note[] = JSON.parse(localStorage.getItem('notesArray') || '[]')
-        // const filteredNotes = notesData.filter(note => note.id !== props.noteFormData!.id)
-        // localStorage.setItem('notesArray', JSON.stringify(filteredNotes))
-        // props.onCloseModal()
     }
 
     useEffect(() => {
         if(props.noteFormData) {
+            // if it receives noteFormData, then it's editing a note,
+            // so we set that note values as initial values on the fields
             titleRef.current!.value = props.noteFormData.title
             bodyRef.current!.value = props.noteFormData.body
         }

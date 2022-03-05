@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react"
+import { createPortal } from "react-dom"
 import NoteForm from "./NoteForm"
 import NotesTile from "./NotesTile/NotesTile"
 
@@ -10,19 +11,20 @@ body: string
 
 const NotesPage: React.FC = (props) => {
     const blurRef= useRef<HTMLDivElement>(null)
-    const searchInputRef = useRef<HTMLInputElement>(null)
     //variable used when opening the form from a note, and not 
     // to create a new one
     const [noteFormData, setNoteFormData] = useState<Note|undefined>(undefined)
     const [notesData, setNotesData]= useState<Note[]>(JSON.parse(localStorage.getItem('notesArray') || '[]'))
+    const [searchInput, setSearchInput] = useState('')
     const [screenWidth, setScreenWidth] = useState(window.innerWidth)
     const [showForm, setShowForm] = useState(false)
 
     useEffect(() => {
+
         // As this triggers a re-render on each resize, each NewsCard
         // calculates the text height again, causing some extra calculations
         // not expensive anyways, but not the best visuals when resizing.
-        // You can see the text resizing a lot.
+        // You can see the text resizing a lot. should fix that later
         function updateWidth() {
             setScreenWidth(window.innerWidth)
         }
@@ -33,7 +35,9 @@ const NotesPage: React.FC = (props) => {
     }, [])
 
     useEffect(() => {
+        // All changes to the notes state end up in a localStorage update
         localStorage.setItem('notesArray', JSON.stringify(notesData))
+
     }, [notesData])
 
     function openForm() {
@@ -63,6 +67,7 @@ const NotesPage: React.FC = (props) => {
             body
         }))
         setShowForm(false)
+        setSearchInput('')
     }
 
     function deleteNote(id: number) {
@@ -74,15 +79,15 @@ const NotesPage: React.FC = (props) => {
         if(e.target === blurRef.current) setShowForm(false)
     }
 
-    function searchNotes() {
-        if(searchInputRef.current?.value === '') {
-            
-        }
+    function filterNotes() {
+        if(searchInput==='') return notesData
+        return notesData.filter(note => 
+            note.title.includes(searchInput) || note.body.includes(searchInput) )
     }
 
     return (
     <>
-    {showForm && <div onClick={checkModalBlur} ref={blurRef}
+    {showForm && createPortal(<div onClick={checkModalBlur} ref={blurRef}
     className="absolute z-10 top-0 left-0 w-full h-full
         bg-black bg-opacity-60 flex justify-center items-center">
         <NoteForm 
@@ -90,7 +95,7 @@ const NotesPage: React.FC = (props) => {
         onAddNote={addNote}
         onEditNote={editNote}
         noteFormData={noteFormData} />
-    </div>}
+    </div>, document.getElementById('modal-portal')!)}
     <div className="px-[3%]">
         <h1 className="text-center text-2xl pt-5">Notas y escritura</h1>
         <div className="grid grid-cols-2 gap-8 mt-5">
@@ -102,9 +107,9 @@ const NotesPage: React.FC = (props) => {
                 >+ Nueva Nota</button>
             </div>
             <div>
-                <input 
-                ref={searchInputRef}
-                onChange={searchNotes}
+                <input
+                value={searchInput}
+                onChange={(e) => setSearchInput(e.target.value)}
                 className="py-1 px-3 transition-all w-40 rounded-md outline-none 
                 border-b-2  focus:border-black focus:w-56"
                 placeholder="Buscar..." />
@@ -114,20 +119,20 @@ const NotesPage: React.FC = (props) => {
         justify-center">
             {screenWidth > 764 && 
                 <>
-                <NotesTile onOpenNote={openFormFromNote} notes={notesData} />
-                <NotesTile onOpenNote={openFormFromNote} notes={notesData} />
-                <NotesTile onOpenNote={openFormFromNote} notes={notesData} />
+                <NotesTile onOpenNote={openFormFromNote} notes={filterNotes()} />
+                <NotesTile onOpenNote={openFormFromNote} notes={filterNotes()} />
+                <NotesTile onOpenNote={openFormFromNote} notes={filterNotes()} />
                 </>
             }
             {(screenWidth > 550 && screenWidth <= 764) && 
                 <>
-                <NotesTile onOpenNote={openFormFromNote} notes={notesData} />
-                <NotesTile onOpenNote={openFormFromNote} notes={notesData} />
+                <NotesTile onOpenNote={openFormFromNote} notes={filterNotes()} />
+                <NotesTile onOpenNote={openFormFromNote} notes={filterNotes()} />
                 </>
             }
             {(screenWidth <= 550) && 
                 <>
-                <NotesTile onOpenNote={openFormFromNote} notes={notesData} />
+                <NotesTile onOpenNote={openFormFromNote} notes={filterNotes()} />
                 </>
             }
         </div>
