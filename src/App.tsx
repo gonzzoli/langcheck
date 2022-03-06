@@ -3,6 +3,7 @@ import NewsPage from "./ArticlesPage/NewsPage";
 import Header from "./components/Header";
 import Sidebar from "./components/Sidebar";
 import NotesPage from "./NotesPage/NotesPage";
+import YoutubePage from "./YoutubePage/YoutubePage";
 
 
 const App: React.FC = () => {
@@ -18,6 +19,7 @@ const App: React.FC = () => {
             <Routes>
               <Route element={<NewsPage />} path='/articles' />
               <Route element={<NotesPage />} path='/notes' />
+              <Route element={<YoutubePage />} path='/videos' />
             </Routes>
         </section>
       </main>

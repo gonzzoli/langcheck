@@ -15,8 +15,10 @@ const rssLinks = [
 
 function NewsPage() {
     const [screenWidth, setScreenWidth] = useState(window.innerWidth)
+    const [articles, setArticles] = useState<Element[]>([])
+    const [loading, setLoading] = useState(false)
     const langCtx = useContext(LangContext)
-
+    
     useEffect(() => {
         // As this triggers a re-render on each resize, each NewsCard
         // calculates the text height again, causing some extra calculations
@@ -31,9 +33,9 @@ function NewsPage() {
         }
     }, [])
 
-const [articles, setArticles] = useState<Element[]>([])
+
     useEffect(() => {
-        //not using yet, having cors problems and many rss 
+        // not using yet, having cors problems and many rss 
         // just don't give full articles
         const rssLink = langCtx.selectedLang === 'spanish' ? rssLinks[0].link : rssLinks[1].link
         async function getArticles() {
@@ -42,10 +44,11 @@ const [articles, setArticles] = useState<Element[]>([])
             const data = new window.DOMParser().parseFromString(res, 'text/xml')
             return data
         }
+        setLoading(true)
         getArticles()
         .then(data => {
-            console.log(data)
             const fetchedArticles = Array.from(data.querySelectorAll('item'))
+            setLoading(false)
             setArticles(fetchedArticles)
         })
     }, [langCtx.selectedLang])
@@ -56,6 +59,7 @@ const [articles, setArticles] = useState<Element[]>([])
             <h1 className="text-center text-2xl mt-5">Noticias y articulos</h1>
             <div className="w-full flex gap-8 px-8 mt-5
             justify-center relative">
+                {loading && <p className='text-xl'>Cargando tus articulos...</p>}
                 {screenWidth > 764 && 
                     <>
                     <NewsTile articles={articles.slice(0, 2)} />
