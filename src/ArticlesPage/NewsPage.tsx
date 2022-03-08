@@ -1,3 +1,5 @@
+import { faSpinner } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useState, useEffect, useContext } from 'react'
 import { LangContext } from '../store/lang-context'
 import NewsTile from './NewsTile/NewsTile'
@@ -57,9 +59,16 @@ function NewsPage() {
     <>
         <div className="px-[3%]">
             <h1 className="text-center text-2xl mt-5">Noticias y articulos</h1>
+            
+            {loading  && 
+            <div className="flex justify-center items-center mt-52">
+            <FontAwesomeIcon
+            className="text-4xl animate-spin-slow"
+            icon={faSpinner} />
+            </div>}
+
             <div className="w-full flex gap-8 px-8 mt-5
             justify-center relative">
-                {loading && <p className='text-xl'>Cargando tus articulos...</p>}
                 {screenWidth > 764 && 
                     <>
                     <NewsTile articles={articles.slice(0, 2)} />

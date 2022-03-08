@@ -16,6 +16,9 @@ module.exports = {
       colors: {
         'orange': '#FFB763',
         'light-orange': '#FFE49E'
+      },
+      animation: {
+        'spin-slow': 'spin 1.5s linear infinite'
       }
     },
     screens: {
