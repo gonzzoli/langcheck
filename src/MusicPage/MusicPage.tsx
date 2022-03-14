@@ -1,24 +1,31 @@
 import { useState } from "react"
 import { musicData, Song } from "./music-data"
 
+function shufflePlaylist(list: Song[]) {
+    const copy = [...list]
+    return copy.sort((a,b) => Math.random() - 0.5)
+}
 
 function MusicPage() {
     const [trackPlaying, setTrackPlaying] = useState<Song>(musicData.french[0])
+
 
     function changeTrack(track: Song) {
         setTrackPlaying(track)
     }
 
     return (
-<div className="px-[3%] pb-5">
+<div className="px-[3%] pb-5 ">
     <h1 className="text-center text-2xl pt-5">Music</h1>
-    <div className="mt-8 flex gap-8">
-        <div className="w-1/2">
+    <div className="mt-8 flex gap-8 mdsm:flex-col">
+        <div className="w-1/2 flex flex-col items-center mdsm:w-full">
             <iframe src={`https://open.spotify.com/embed/track/${trackPlaying.id}?utm_source=generator`}
             className="w-full bg-black max-w-lg h-[80px] rounded-t-md"
             frameBorder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>
-            <div className="bg-white rounded-b-md max-w-lg max-h-72 overflow-y-scroll">
-                {musicData.french.map(song => {
+            <div className="bg-white rounded-b-md w-full max-w-lg 
+            max-h-72 overflow-y-scroll pr-3
+            scrollbar-thin scrollbar-thumb-gray-900 scrollbar-track-white">
+                {shufflePlaylist(musicData.french).map(song => {
                     return (
                         <>
                         <div
@@ -35,7 +42,7 @@ function MusicPage() {
                 })}
             </div>
         </div>
-        <div className="w-1/2 bg-slate-50 rounded-md p-3 ">
+        <div className="w-1/2 bg-slate-50 rounded-md p-3 mdsm:w-full max-w-lg mx-auto">
             {trackPlaying.lyrics.split('|').map(line => <span key={Math.random()} className="block">{line}</span>)}
         </div>
     </div>

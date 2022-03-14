@@ -16,7 +16,9 @@ const App: React.FC = () => {
       overflow-x-hidden'>
         <Sidebar />
         <section className="h-full w-full 
-        overflow-y-scroll overflow-x-hidden relative">
+        overflow-y-scroll overflow-x-hidden relative
+        scrollbar-thin scrollbar-thumb-gray-900 
+        scrollbar-track-white pr-2">
             <Routes>
               <Route element={<NewsPage />} path='/articles' />
               <Route element={<NotesPage />} path='/notes' />
