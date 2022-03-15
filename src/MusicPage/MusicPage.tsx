@@ -27,17 +27,16 @@ function MusicPage() {
             scrollbar-thin scrollbar-thumb-gray-900 scrollbar-track-white">
                 {shufflePlaylist(musicData.french).map(song => {
                     return (
-                        <>
                         <div
+                        key={song.id}
                         onClick={() => {changeTrack(song)}}
-                        className="flex justify-between items-center p-2
+                        className="border-b-2
+                        flex justify-between items-center p-2
                         hover:bg-slate-200 transition-all cursor-pointer">
                             <span className="w-1/3 whitespace-nowrap overflow-hidden">{song.name}</span>
                             <span className="w-1/3 whitespace-nowrap overflow-hidden justify-center flex">{song.artist}</span>
                             <span className="w-1/3 whitespace-nowrap overflow-hidden flex justify-end">{song.duration}</span>
                         </div>
-                        <hr></hr>
-                        </>
                     )
                 })}
             </div>

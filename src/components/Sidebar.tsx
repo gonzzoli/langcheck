@@ -7,13 +7,13 @@ import { useContext, useState } from 'react'
 import { LangContext } from '../store/lang-context'
 
 const icons = [
-    {icon: faGraduationCap, page: 'lessons'},
+    // {icon: faGraduationCap, page: 'lessons'},
     {icon: faNewspaper, page: 'articles'},
     {icon: faNoteSticky, page: 'notes'},
     {icon: faMusic, page: 'music'},
-    {icon: faComment, page: 'chat'},
+    // {icon: faComment, page: 'chat'},
     {icon: faYoutube, page: 'videos'},
-    {icon: faVideoCamera, page: 'recording'}
+    // {icon: faVideoCamera, page: 'recording'}
 ]
 
 const LangFlags = [

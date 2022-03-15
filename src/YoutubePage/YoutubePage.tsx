@@ -24,12 +24,16 @@ function YoutubePage() {
 
     useEffect(() => {
         function shuffleVideos(videos: Video[]) {
-            return videos.sort((a: Video,b: Video) => Math.random()<0.5 ? 1 : 0)
+            // just shuffles the videos a bit so there aren't 10 vids
+            // from each channel all together
+            const videosCopy = [...videos]
+            return videosCopy.sort((a: Video,b: Video) => Math.random() - 0.5)
         }
 
         async function getData(id: string) {
             const req = await fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=${id}&maxResults=10&key=AIzaSyBacW66axNYsM1lgtQxC4P1loX5IE_5lpU`)
             const res = await req.json()
+
             return res.items.map((video: any) => {
                 return {
                     videoId: video.id.videoId,
@@ -39,30 +43,32 @@ function YoutubePage() {
                 }
             })
         }
+        setLoading(true)
         //gets 10 videos from each channel and gets them all together shuffled
         channelIds.portuguese.forEach(id => getData(id)
         .then(videos => setVideosData((prevData: any) => shuffleVideos(prevData.concat(...videos))))
+        .then(() => setLoading(false))
         .catch(err => console.log(err)))
 
     }, [])
 
-    // useEffect(() => {
+    useEffect(() => {
 
-    //     // As this triggers a re-render on each resize, each NewsCard
-    //     // calculates the text height again, causing some extra calculations
-    //     // not expensive anyways, but not the best visuals when resizing.
-    //     // You can see the text resizing a lot. should fix that later
-    //     function updateWidth() {
-    //         setScreenWidth(window.innerWidth)
-    //     }
-    //     window.addEventListener('resize', updateWidth)
-    //     return () => {
-    //         window.removeEventListener('resize', updateWidth)
-    //     }
-    // }, [])
+        // As this triggers a re-render on each resize, each NewsCard
+        // calculates the text height again, causing some extra calculations
+        // not expensive anyways, but not the best visuals when resizing.
+        // You can see the text resizing a lot. should fix that later
+        function updateWidth() {
+            setScreenWidth(window.innerWidth)
+        }
+        window.addEventListener('resize', updateWidth)
+        return () => {
+            window.removeEventListener('resize', updateWidth)
+        }
+    }, [])
 
 
-    function orderVideos(colNumber: number, totalCols: number) {
+    function filterVideos(colNumber: number, totalCols: number) {
         // filter the videos by the column they are being sent
         return videosData.filter((video: any, index: number) => {
             return (index - colNumber) % totalCols === 0
@@ -83,19 +89,19 @@ function YoutubePage() {
             <div className="flex gap-8 mt-8 justify-center">
             {screenWidth > 764 && 
                 <>
-                <VideoTile videos={orderVideos(0, 3)} />
-                <VideoTile videos={orderVideos(1, 3)} />
-                <VideoTile videos={orderVideos(2, 3)} />
+                <VideoTile videos={filterVideos(0, 3)} />
+                <VideoTile videos={filterVideos(1, 3)} />
+                <VideoTile videos={filterVideos(2, 3)} />
                 </>
             }
             {(screenWidth > 550 && screenWidth <= 764) && 
                 <>
-                <VideoTile videos={orderVideos(0, 2)} />
-                <VideoTile videos={orderVideos(1, 2)} />
+                <VideoTile videos={filterVideos(0, 2)} />
+                <VideoTile videos={filterVideos(1, 2)} />
                 </>
             }
             {(screenWidth <= 550) && 
-                <VideoTile videos={orderVideos(0, 1)} />
+                <VideoTile videos={filterVideos(0, 1)} />
             }
             </div>
         </div>
