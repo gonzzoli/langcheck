@@ -7,11 +7,11 @@ import NewsTile from './NewsTile/NewsTile'
 const rssLinks = [
     {
         lang: 'spanish',
-        link: 'https://www.metroworldnews.com/arc/outboundfeeds/rss/?outputType=xml'
+        links: ['https://feeds.elpais.com/mrss-s/pages/ep/site/elpais.com/portada']
     },
     {
         lang: 'portuguese',
-        link: 'https://oglobo.globo.com/rss.xml?completo=true'
+        links: ['https://oglobo.globo.com/rss.xml?completo=true']
     }
 ]
 
@@ -37,23 +37,38 @@ function NewsPage() {
 
 
     useEffect(() => {
-        // not using yet, having cors problems and many rss 
-        // just don't give full articles
-        const rssLink = langCtx.selectedLang === 'spanish' ? rssLinks[0].link : rssLinks[1].link
-        async function getArticles() {
-            const req = await fetch('https://oglobo.globo.com/rss.xml?completo=true')
+        // whenever language changes, we empty the articles array
+        // and fill it up with new info
+
+        const endpoints = langCtx.selectedLang === 'spanish' ? rssLinks[0].links : rssLinks[1].links
+
+        async function getArticles(endpoint: string) {
+            const req = await fetch(endpoint)
             const res = await req.text()
             const data = new window.DOMParser().parseFromString(res, 'text/xml')
+            setLoading(false)
             return data
         }
         setLoading(true)
-        getArticles()
+
+        const promiseArr = endpoints.map(endpoint => getArticles(endpoint))
+
+        // make all the requests and then set the articles
+        Promise.all(promiseArr)
         .then(data => {
-            const fetchedArticles = Array.from(data.querySelectorAll('item'))
-            setLoading(false)
+            const fetchedArticles: Element[] = []
+            data.forEach(newspaper => 
+                fetchedArticles.push(...Array.from(newspaper.querySelectorAll('item'))))
             setArticles(fetchedArticles)
         })
+        .catch(err => console.log(err))
+
+
     }, [langCtx.selectedLang])
+
+    useEffect(() => {
+        console.log(articles)
+    }, [articles])
 
     return (
     <>
@@ -66,7 +81,7 @@ function NewsPage() {
             className="text-4xl animate-spin-slow"
             icon={faSpinner} />
             </div>}
-
+            {!loading && 
             <div className="w-full flex gap-8 px-8 mt-5
             justify-center relative">
                 {screenWidth > 764 && 
@@ -87,7 +102,7 @@ function NewsPage() {
                     <NewsTile articles={articles.slice(0, 9)} />
                     </>
                 }
-            </div>
+            </div>}
         </div>
     </>
     )
