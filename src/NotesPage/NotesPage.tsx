@@ -1,5 +1,6 @@
-import React, { useEffect, useRef, useState } from "react"
+import React, { useContext, useEffect, useRef, useState } from "react"
 import { createPortal } from "react-dom"
+import { LangContext } from "../store/lang-context"
 import NoteForm from "./NoteForm"
 import NotesTile from "./NotesTile/NotesTile"
 
@@ -9,12 +10,29 @@ title: string,
 body: string
 }
 
+type NotesData = {
+    [key: string]: Note[],
+    english: Note[], 
+    spanish: Note[], 
+    portuguese: Note[]
+}
+
+const emptyNotes: NotesData = {
+    english: [],
+    spanish: [],
+    portuguese: []
+}
+
+
 const NotesPage: React.FC = (props) => {
     const blurRef= useRef<HTMLDivElement>(null)
+    const selectedLang = useContext(LangContext).selectedLang
     //variable used when opening the form from a note, and not 
     // to create a new one
     const [noteFormData, setNoteFormData] = useState<Note|undefined>(undefined)
-    const [notesData, setNotesData]= useState<Note[]>(JSON.parse(localStorage.getItem('notesArray') || '[]'))
+    const [notesData, setNotesData] = useState<NotesData>(JSON.parse(localStorage.getItem('notes') || JSON.stringify(emptyNotes)))
+
+    //const [notesData, setNotesData]= useState<Note[]>(JSON.parse(localStorage.getItem('notesArray') || '[]'))
     const [searchInput, setSearchInput] = useState('')
     const [screenWidth, setScreenWidth] = useState(window.innerWidth)
     const [showForm, setShowForm] = useState(false)
@@ -36,8 +54,8 @@ const NotesPage: React.FC = (props) => {
 
     useEffect(() => {
         // All changes to the notes state end up in a localStorage update
-        localStorage.setItem('notesArray', JSON.stringify(notesData))
-
+        console.log(notesData)
+        localStorage.setItem('notes', JSON.stringify(notesData))
     }, [notesData])
 
     function openForm() {
@@ -52,26 +70,38 @@ const NotesPage: React.FC = (props) => {
 
     function editNote(editedNote: Note) {
         setNotesData(prevNotes => {
-            const noteIndex = prevNotes.findIndex(note => note.id === editedNote.id)
-            prevNotes.splice(noteIndex, 1, editedNote)
+            const noteIndex = prevNotes[selectedLang].findIndex(note => note.id === editedNote.id)
+            prevNotes[selectedLang].splice(noteIndex, 1, editedNote)
             return prevNotes
         })
         setShowForm(false)
     }
-
+    
     function addNote(title: string, body: string) {
-        const nextId = (Math.max(...notesData.map((note: Note) => note.id), 0))+1
-        setNotesData(prevNotes => prevNotes.concat({
-            id:nextId,
-            title,
-            body
-        }))
+        console.log('adding: ', title)
+
+        const nextId = (Math.max(...notesData[selectedLang].map((note: Note) => note.id), 0))+1
+        
+        setNotesData(prevNotes => (
+            {
+                ...prevNotes,
+                [selectedLang]: [
+                    ...prevNotes[selectedLang], 
+                    {id:nextId,
+                    title,
+                    body}
+                ]
+            }
+        ))
         setShowForm(false)
         setSearchInput('')
     }
 
     function deleteNote(id: number) {
-        setNotesData(prevNotes => prevNotes.filter(note => note.id !== id))
+        setNotesData(prevNotes => {
+            prevNotes[selectedLang] = prevNotes[selectedLang].filter(note => note.id !== id)
+            return prevNotes
+        })
         setShowForm(false)
     }
 
@@ -81,7 +111,7 @@ const NotesPage: React.FC = (props) => {
 
     function filterNotes(colNumber: number, totalCols: number) {
         // first filters the notes by the search input
-        const filteredSearchNotes = notesData.filter(note => note.title.includes(searchInput) || note.body.includes(searchInput))
+        const filteredSearchNotes = notesData[selectedLang].filter(note => note.title.includes(searchInput) || note.body.includes(searchInput))
         // then filter the notes by the column they are being sent
         return filteredSearchNotes.filter((note, index) => {
             return (index - colNumber) % totalCols === 0
