@@ -4,20 +4,35 @@ import { useState, useEffect, useContext } from 'react'
 import { LangContext } from '../store/lang-context'
 import NewsTile from './NewsTile/NewsTile'
 
+// const rssLinks = [
+//     {
+//         lang: 'spanish',
+//         links: ['https://feeds.elpais.com/mrss-s/pages/ep/site/elpais.com/portada']
+//     },
+//     {
+//         lang: 'portuguese',
+//         links: ['https://oglobo.globo.com/rss.xml?completo=true']
+//     }
+// ]
+
 const rssLinks = [
     {
         lang: 'spanish',
-        links: ['https://feeds.elpais.com/mrss-s/pages/ep/site/elpais.com/portada']
+        links: [
+            {newspaper: 'El Pais', link: 'https://feeds.elpais.com/mrss-s/pages/ep/site/elpais.com/portada'}
+        ]
     },
     {
         lang: 'portuguese',
-        links: ['https://oglobo.globo.com/rss.xml?completo=true']
+        links: [
+            {newspaper: 'O Globo', link: 'https://oglobo.globo.com/rss.xml?completo=true'}
+        ]
     }
 ]
 
 function NewsPage() {
     const [screenWidth, setScreenWidth] = useState(window.innerWidth)
-    const [articles, setArticles] = useState<Element[]>([])
+    const [articles, setArticles] = useState<{newspaper: string, item: Element}[]>([])
     const [loading, setLoading] = useState(false)
     const langCtx = useContext(LangContext)
     
@@ -37,17 +52,19 @@ function NewsPage() {
 
 
     useEffect(() => {
-        // whenever language changes, we empty the articles array
-        // and fill it up with new info
 
         const endpoints = langCtx.selectedLang === 'spanish' ? rssLinks[0].links : rssLinks[1].links
 
-        async function getArticles(endpoint: string) {
-            const req = await fetch(endpoint)
+        async function getArticles({newspaper, link}: {newspaper: string, link: string}) {
+            const req = await fetch(link)
             const res = await req.text()
             const data = new window.DOMParser().parseFromString(res, 'text/xml')
+            const items = data.querySelectorAll('item')
             setLoading(false)
-            return data
+            return {
+                itemsList: items,
+                newspaper
+            }
         }
         setLoading(true)
 
@@ -55,10 +72,18 @@ function NewsPage() {
 
         // make all the requests and then set the articles
         Promise.all(promiseArr)
+        // will return an array like [{itemsData: alltheitemsasxml, newspaper: name}, ...
+
         .then(data => {
-            const fetchedArticles: Element[] = []
-            data.forEach(newspaper => 
-                fetchedArticles.push(...Array.from(newspaper.querySelectorAll('item'))))
+            const fetchedArticles: {item: Element, newspaper: string}[] = []
+            data.forEach(newsArticles => {
+                // articles of one paper
+                const items = Array.from(newsArticles.itemsList)
+                .map(item => {
+                    return {newspaper: newsArticles.newspaper, item}
+                })
+                fetchedArticles.push(...items)
+            })
             setArticles(fetchedArticles)
         })
         .catch(err => console.log(err))

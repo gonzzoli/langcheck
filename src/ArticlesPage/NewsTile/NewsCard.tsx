@@ -1,14 +1,15 @@
 
 
-const NewsCard: React.FC<{data: any}> = (props) => {
+const NewsCard: React.FC<{data: {item: Element, newspaper: string}}> = (props) => {
+    console.log(props.data)
     const textHeight = 150 + Math.floor(Math.random()*300)
-    const title = props.data.querySelector('title').textContent
-    const originalLink = props.data.querySelector('link').textContent
+    const title = props.data.item.querySelector('title')?.textContent
+    const originalLink = props.data.item.querySelector('link')?.textContent
     // Article body without the html tags. Could be better if transformed to HTML
     // but had styling issues with tailwind. No way for now to acces the tags inside
     // the generated HTML
     const articleBody = 
-    props.data.querySelector('description').textContent.replace(/<.+?>/g, '')
+    props.data.item.querySelector('description')?.textContent?.replace(/<.+?>/g, '')
 
     return (
     <div className="p-3 flex flex-col rounded-md
@@ -18,8 +19,8 @@ const NewsCard: React.FC<{data: any}> = (props) => {
         className="text-blue-600 underline 
         hover:text-blue-900 mb-1"
         target='_blank' 
-        href={originalLink}>
-            O globo</a>
+        href={originalLink || 'https://www.google.com.ar/?hl=es'}>
+            {props.data.newspaper}</a>
         <div 
         style={{
             maxHeight: textHeight + 'px'
@@ -28,9 +29,11 @@ const NewsCard: React.FC<{data: any}> = (props) => {
         >
         {articleBody}
         </div>
-        <p className="text-orange 
+        <a 
+        href={originalLink || 'https://www.google.com.ar/?hl=es'}
+        className="text-orange 
         hover:text-amber-700
-        transition-all cursor-pointer">Leer mas...</p>
+        transition-all cursor-pointer">Leer mas...</a>
     </div>
     )
 }

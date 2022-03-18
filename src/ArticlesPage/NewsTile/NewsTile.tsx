@@ -1,6 +1,6 @@
 import NewsCard from "./NewsCard"
 
-const NewsTile: React.FC<{articles: Element[]}> = (props) => {
+const NewsTile: React.FC<{articles: {newspaper: string, item: Element}[]}> = (props) => {
 
     return (
         <div className="flex 
