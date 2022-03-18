@@ -14,13 +14,15 @@ type NotesData = {
     [key: string]: Note[],
     english: Note[], 
     spanish: Note[], 
-    portuguese: Note[]
+    portuguese: Note[],
+    french: Note[]
 }
 
 const emptyNotes: NotesData = {
     english: [],
     spanish: [],
-    portuguese: []
+    portuguese: [],
+    french: []
 }
 
 

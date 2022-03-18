@@ -1,6 +1,7 @@
 import { faSpinner } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
+import { LangContext } from "../store/lang-context"
 import VideoTile from "./VideoTile/VideoTile"
 
 type Video = {
@@ -10,17 +11,18 @@ type Video = {
     channelTitle: string
 }
 
-const channelIds = {
-    portuguese: ['UCH2VZQBLFTOp6I_qgnBJCuQ', 'UCEWHPFNilsT0IfQfutVzsag', 'UCCJ9Shh3w90o4LawLcOQ3Bg', 'UCj0O6W8yDuLg3iraAXKgCrQ'],
-    french: ['UCI4xp8qHD1MDErkqxb1dPbA', 'UCbj8Qov-9b5WTU1X4y7Yt-w', 'UC9n76QPNgx_C6lm8vK7ltpQ', ':UCi7MkdJLwvV99438YeUhZeg', 'UC57J0rAl1Ist28Ln2bVji0Q'],
-    spanish: [],
-    english: []
+const channelIds: {[key: string]: string[]} = {
+    portuguese: ['UCH2VZQBLFTOp6I_qgnBJCuQ', 'UCEWHPFNilsT0IfQfutVzsag', 'UCCJ9Shh3w90o4LawLcOQ3Bg', 'UCj0O6W8yDuLg3iraAXKgCrQ', 'UCPHXtOVmjvbP9OJihsd7gCg'],
+    french: ['UCI4xp8qHD1MDErkqxb1dPbA', 'UCbj8Qov-9b5WTU1X4y7Yt-w', 'UC9n76QPNgx_C6lm8vK7ltpQ', 'UCi7MkdJLwvV99438YeUhZeg', 'UC57J0rAl1Ist28Ln2bVji0Q'],
+    spanish: ['UCTJTpwrK4a-ajXs4-Wry09A', 'UCcjIvuxmWlS5IEQ0JdPV4Ng', 'UCouyFdE9-Lrjo3M_2idKq1A', 'UC6jNDNkoOKQfB5djK2IBDoA', 'UCECJDeK0MNapZbpaOzxrUPA'],
+    english: ['UCAQg09FkoobmLquNNoO4ulg', 'UC32mYgIHS-e3C3Eyd2tRw6g', 'UCB-Ps5DdRsVAcml-Y43o7RQ', 'UCQ4zIVlfhsmvds7WuKeL2Bw', 'UCZbOmMsPgxuWmj5pGymAOnA']
 }
 
 function YoutubePage() {
     const [videosData, setVideosData] = useState<Video[]>([])
     const [screenWidth, setScreenWidth] = useState(window.innerWidth)
     const [loading, setLoading] = useState(false)
+    const selectedLang = useContext(LangContext).selectedLang
 
     useEffect(() => {
         function shuffleVideos(videos: Video[]) {
@@ -33,7 +35,6 @@ function YoutubePage() {
         async function getData(id: string) {
             const req = await fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=${id}&maxResults=10&key=AIzaSyBacW66axNYsM1lgtQxC4P1loX5IE_5lpU`)
             const res = await req.json()
-
             return res.items.map((video: any) => {
                 return {
                     videoId: video.id.videoId,
@@ -44,13 +45,16 @@ function YoutubePage() {
             })
         }
         setLoading(true)
-        //gets 10 videos from each channel and gets them all together shuffled
-        channelIds.portuguese.forEach(id => getData(id)
-        .then(videos => setVideosData((prevData: any) => shuffleVideos(prevData.concat(...videos))))
-        .then(() => setLoading(false))
-        .catch(err => console.log(err)))
 
-    }, [])
+        //gets 10 videos from each channel and gets them all together shuffled
+        Promise.all(channelIds[selectedLang].map(id => getData(id)))
+        .then(data => {
+            console.log(data)
+            setVideosData(shuffleVideos(data.flat(1)))
+            setLoading(false)   
+        })
+        .catch(err => console.log(err))
+    }, [selectedLang])
 
     useEffect(() => {
 

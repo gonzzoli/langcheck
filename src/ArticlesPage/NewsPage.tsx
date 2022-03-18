@@ -66,10 +66,6 @@ function NewsPage() {
 
     }, [langCtx.selectedLang])
 
-    useEffect(() => {
-        console.log(articles)
-    }, [articles])
-
     return (
     <>
         <div className="px-[3%]">

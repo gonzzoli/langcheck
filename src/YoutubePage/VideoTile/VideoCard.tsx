@@ -6,6 +6,7 @@ const VideoCard: React.FC<{data: any}> = (props) => {
         <div className="flex flex-col bg-white rounded-md">
             <div>
                 <iframe id="ytplayer" className="w-full aspect-video"
+                allowFullScreen
                 src={`http://www.youtube.com/embed/${props.data.videoId}`}/>
             </div>
             <div className="p-3 mt-1">

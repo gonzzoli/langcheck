@@ -28,6 +28,10 @@ const LangFlags = [
     {
         lang: 'portuguese',
         flagElem: <Flags.BR title='Português' />
+    },
+    {
+        lang: 'french',
+        flagElem: <Flags.FR title='Français' />
     }
 ]
 
