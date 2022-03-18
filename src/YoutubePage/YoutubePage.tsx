@@ -25,6 +25,7 @@ function YoutubePage() {
     const selectedLang = useContext(LangContext).selectedLang
 
     useEffect(() => {
+        setVideosData([])
         function shuffleVideos(videos: Video[]) {
             // just shuffles the videos a bit so there aren't 10 vids
             // from each channel all together
