@@ -50,7 +50,6 @@ function YoutubePage() {
         //gets 10 videos from each channel and gets them all together shuffled
         Promise.all(channelIds[selectedLang].map(id => getData(id)))
         .then(data => {
-            console.log(data)
             setVideosData(shuffleVideos(data.flat(1)))
             setLoading(false)   
         })

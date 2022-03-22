@@ -27,6 +27,18 @@ const rssLinks = [
         links: [
             {newspaper: 'O Globo', link: 'https://oglobo.globo.com/rss.xml?completo=true'}
         ]
+    },
+    {
+        lang: 'english',
+        links: [
+            {newspaper: 'The News Stateman', link: 'https://www.newstatesman.com/feed'}
+        ]
+    },
+    {
+        lang: 'french',
+        links: [
+            {newspaper: 'frances', link: 'https://www.humanite.fr/rss/actu.rss'}
+        ]
     }
 ]
 
@@ -53,7 +65,8 @@ function NewsPage() {
 
     useEffect(() => {
 
-        const endpoints = langCtx.selectedLang === 'spanish' ? rssLinks[0].links : rssLinks[1].links
+        //const endpoints = langCtx.selectedLang === 'spanish' ? rssLinks[0].links : rssLinks[1].links
+        const endpoints = rssLinks.find(links => links.lang === langCtx.selectedLang)?.links || rssLinks[0].links
 
         async function getArticles({newspaper, link}: {newspaper: string, link: string}) {
             const req = await fetch(link)
