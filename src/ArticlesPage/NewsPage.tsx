@@ -15,6 +15,13 @@ import NewsTile from './NewsTile/NewsTile'
 //     }
 // ]
 
+const pageTitle: {[key: string]: string} = {
+    spanish: 'Noticias y artículos',
+    portuguese: '',
+    english: 'News and articles',
+    french: ''
+}
+
 const rssLinks = [
     {
         lang: 'spanish',
@@ -107,7 +114,7 @@ function NewsPage() {
     return (
     <>
         <div className="px-[3%]">
-            <h1 className="text-center text-2xl mt-5">Noticias y articulos</h1>
+            <h1 className="text-center text-2xl mt-5">{pageTitle[langCtx.selectedLang]}</h1>
             
             {loading  && 
             <div className="flex justify-center items-center mt-52">

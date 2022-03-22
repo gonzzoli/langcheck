@@ -25,6 +25,58 @@ const emptyNotes: NotesData = {
     french: []
 }
 
+const pageText: {[key: string]: {
+    pageTitle: string,
+    addNote: string,
+    searchPlaceholder: string,
+    formTitlePlaceholder: string,
+    formNotePlaceholder: string,
+    formSave: string,
+    formDelete: string,
+    formSetTitle: string
+}} = {
+    spanish: {
+        pageTitle: 'Notas y escritura',
+        addNote: 'Nueva Nota',
+        searchPlaceholder: 'Buscar',
+        formTitlePlaceholder: 'Título',
+        formNotePlaceholder: 'Tu nota',
+        formSave: 'Guardar',
+        formDelete: 'Eliminar',
+        formSetTitle: 'Pon un título al menos'
+    },
+    portuguese: {
+        pageTitle: 'Notas e escrita',
+        addNote: 'Nova nota',
+        searchPlaceholder: 'Procurar',
+        formTitlePlaceholder: 'Título',
+        formNotePlaceholder: 'Sua nota',
+        formSave: 'Salvar',
+        formDelete: 'Remover',
+        formSetTitle: 'Coloque pelo menos um título'
+    },
+    english: {
+        pageTitle: 'Notes and writing',
+        addNote: 'New Note',
+        searchPlaceholder: 'Search',
+        formTitlePlaceholder: 'Title',
+        formNotePlaceholder: 'Your note',
+        formSave: 'Save',
+        formDelete: 'Delete',
+        formSetTitle: 'Set a title at least'
+    },
+    french: {
+        pageTitle: 'Notes et Écriture',
+        addNote: 'Nouvelle Note',
+        searchPlaceholder: 'Chercher',
+        formTitlePlaceholder: 'Titre',
+        formNotePlaceholder: 'Votre note',
+        formSave: 'Sauvegarder',
+        formDelete: 'Retirer',
+        formSetTitle: 'Mettre au moins un titre'
+    }
+}
+
 
 const NotesPage: React.FC = (props) => {
     const blurRef= useRef<HTMLDivElement>(null)
@@ -132,14 +184,14 @@ const NotesPage: React.FC = (props) => {
         noteFormData={noteFormData} />
     </div>, document.getElementById('modal-portal')!)}
     <div className="px-[3%]">
-        <h1 className="text-center text-2xl pt-5">Notas y escritura</h1>
+        <h1 className="text-center text-2xl pt-5">{pageText[selectedLang].pageTitle}</h1>
         <div className="grid grid-cols-2 gap-8 mt-5">
             <div className="flex justify-end">
                 <button
                 onClick={openForm}
                 className="py-1 px-5 bg-light-orange rounded-md
                 font-bold hover:bg-orange transition-all"
-                >+ Nueva Nota</button>
+                >+ {pageText[selectedLang].addNote}</button>
             </div>
             <div>
                 <input
@@ -147,7 +199,7 @@ const NotesPage: React.FC = (props) => {
                 onChange={(e) => setSearchInput(e.target.value)}
                 className="py-1 px-3 transition-all w-40 rounded-md outline-none 
                 border-b-2  focus:border-black focus:w-56"
-                placeholder="Buscar..." />
+                placeholder={`${pageText[selectedLang].searchPlaceholder}...`} />
             </div>
         </div>
         <div className="w-full flex gap-8 px-8 mt-5

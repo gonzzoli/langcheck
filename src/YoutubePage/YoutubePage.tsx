@@ -18,6 +18,13 @@ const channelIds: {[key: string]: string[]} = {
     english: ['UCAQg09FkoobmLquNNoO4ulg', 'UC32mYgIHS-e3C3Eyd2tRw6g', 'UCB-Ps5DdRsVAcml-Y43o7RQ', 'UCQ4zIVlfhsmvds7WuKeL2Bw', 'UCZbOmMsPgxuWmj5pGymAOnA']
 }
 
+const pageTitle: {[key: string]: string} = {
+    spanish: 'Videos',
+    portuguese: 'Videos',
+    english: 'Videos',
+    french: 'Vidéos'
+}
+
 function YoutubePage() {
     const [videosData, setVideosData] = useState<Video[]>([])
     const [screenWidth, setScreenWidth] = useState(window.innerWidth)
@@ -81,7 +88,7 @@ function YoutubePage() {
 
     return (
         <div className="px-[3%]">
-            <h1 className="text-center text-2xl pt-5">Videos</h1>
+            <h1 className="text-center text-2xl pt-5">{pageTitle[selectedLang]}</h1>
             
             {loading && 
             <div className="flex justify-center items-center mt-52">

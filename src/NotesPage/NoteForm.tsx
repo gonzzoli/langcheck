@@ -1,6 +1,44 @@
-import { useEffect, useRef, useState } from "react"
+import { useContext, useEffect, useRef, useState } from "react"
+import { LangContext } from "../store/lang-context"
 import { Note } from "./NotesPage"
 
+
+const formText: {[key: string]: {
+    titlePlaceholder: string,
+    notePlaceholder: string,
+    save: string,
+    delete: string,
+    setTitle: string
+}} = {
+    spanish: {
+        titlePlaceholder: 'Título',
+        notePlaceholder: 'Tu nota',
+        save: 'Guardar',
+        delete: 'Eliminar',
+        setTitle: 'Pon un título al menos'
+    },
+    portuguese: {
+        titlePlaceholder: 'Título',
+        notePlaceholder: 'Sua nota',
+        save: 'Salvar',
+        delete: 'Remover',
+        setTitle: 'Coloque pelo menos um título'
+    },
+    english: {
+        titlePlaceholder: 'Title',
+        notePlaceholder: 'Your note',
+        save: 'Save',
+        delete: 'Delete',
+        setTitle: 'Set a title at least'
+    },
+    french: {
+        titlePlaceholder: 'Titre',
+        notePlaceholder: 'Votre note',
+        save: 'Sauvegarder',
+        delete: 'Retirer',
+        setTitle: 'Mettre au moins un titre'
+    }
+}
 
 const NoteForm: React.FC<{
     noteFormData: Note | undefined,
@@ -11,6 +49,7 @@ const NoteForm: React.FC<{
     const titleRef = useRef<HTMLInputElement>(null)
     const bodyRef = useRef<HTMLTextAreaElement>(null)
     const [showError, setShowError] = useState(false)
+    const selectedLang = useContext(LangContext).selectedLang
 
     function saveNote() {
         //checks if there's input on either field
@@ -66,26 +105,26 @@ const NoteForm: React.FC<{
             `w-full outline-none transition-all
             rounded-md focus:border-b-2 border-black focus:-mb-0.5
             font-bold p-1`}
-            placeholder="Titulo..." />
-            {showError && <p className="text-red-500 p-1 pb-0 text-sm">Set a title at least!</p>}
+            placeholder={`${formText[selectedLang].titlePlaceholder}...`} />
+            {showError && <p className="text-red-500 p-1 pb-0 text-sm">{formText[selectedLang].setTitle}!</p>}
             <hr className="my-2"></hr>
             <textarea
             ref={bodyRef} 
             className="resize-none w-full outline-none transition-all
             rounded-md focus:border-b-2 border-orange focus:-mb-0.5 p-1
             h-80"
-            placeholder="Tu nota..." />
+            placeholder={`${formText[selectedLang].notePlaceholder}...`} />
             <div className="flex justify-between items-center">
                 {props.noteFormData && <button
                 onClick={deleteNote}
                 className="py-1 px-4 text-red-600 bg-red-100
                 hover:bg-red-200 transition-all rounded-md mt-2 ml-0">
-                Eliminar</button> }
+                {formText[selectedLang].delete}</button> }
                 <button
                 onClick={saveNote}
                 className="py-1 px-4 bg-light-orange
                 hover:bg-orange transition-all rounded-md mt-2 ml-0">
-                Guardar</button>
+                {formText[selectedLang].save}</button>
             </div>
         </div>
     )

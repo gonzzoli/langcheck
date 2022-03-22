@@ -1,5 +1,13 @@
-import { useState } from "react"
+import { useContext, useState } from "react"
+import { LangContext } from "../store/lang-context"
 import { musicData, Song } from "./music-data"
+
+const pageTitle: {[key: string]: string} = {
+    spanish: 'Música',
+    portuguese: 'Música',
+    english: 'Music',
+    french: 'Musique'
+}
 
 function shufflePlaylist(list: Song[]) {
     const copy = [...list]
@@ -8,7 +16,7 @@ function shufflePlaylist(list: Song[]) {
 
 function MusicPage() {
     const [trackPlaying, setTrackPlaying] = useState<Song>(musicData.french[0])
-
+    const selectedLang = useContext(LangContext).selectedLang
 
     function changeTrack(track: Song) {
         setTrackPlaying(track)
@@ -16,7 +24,7 @@ function MusicPage() {
 
     return (
 <div className="px-[3%] pb-5 ">
-    <h1 className="text-center text-2xl pt-5">Music</h1>
+    <h1 className="text-center text-2xl pt-5">{pageTitle[selectedLang]}</h1>
     <div className="mt-8 flex gap-8 mdsm:flex-col">
         <div className="w-1/2 flex flex-col items-center mdsm:w-full">
             <iframe src={`https://open.spotify.com/embed/track/${trackPlaying.id}?utm_source=generator`}

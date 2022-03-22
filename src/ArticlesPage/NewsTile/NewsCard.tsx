@@ -1,7 +1,16 @@
+import { useContext } from "react"
+import { LangContext } from "../../store/lang-context"
 
+const continueReading: {[key: string]: string} = {
+    spanish: 'Leer mas...',
+    portuguese: 'Ler mais...',
+    english: 'Continue reading...',
+    french: 'Continuer à lire...'
+}
 
 const NewsCard: React.FC<{data: {item: Element, newspaper: string}}> = (props) => {
-    console.log(props.data)
+    const selectedLang = useContext(LangContext).selectedLang
+
     const textHeight = 150 + Math.floor(Math.random()*300)
     const title = props.data.item.querySelector('title')?.textContent
     const originalLink = props.data.item.querySelector('link')?.textContent
@@ -34,7 +43,7 @@ const NewsCard: React.FC<{data: {item: Element, newspaper: string}}> = (props) =
         target='_blank'
         className="text-orange 
         hover:text-amber-700
-        transition-all cursor-pointer">Leer mas...</a>
+        transition-all cursor-pointer">{continueReading[selectedLang]}</a>
     </div>
     )
 }
