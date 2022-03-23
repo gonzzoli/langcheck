@@ -33,7 +33,7 @@ function MusicPage() {
             <div className="bg-white rounded-b-md w-full max-w-lg 
             max-h-72 overflow-y-scroll pr-3
             scrollbar-thin scrollbar-thumb-gray-900 scrollbar-track-white">
-                {shufflePlaylist(musicData.french).map(song => {
+                {shufflePlaylist(musicData[selectedLang]).map(song => {
                     return (
                         <div
                         key={song.id}
