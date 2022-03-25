@@ -1,6 +1,7 @@
-import { useContext, useEffect, useState } from "react"
+import { useCallback, useContext, useEffect, useState } from "react"
 import { LangContext } from "../store/lang-context"
 import { musicData, Song } from "./music-data"
+import Playlist from "./Playlist"
 
 const pageTitle: {[key: string]: string} = {
     spanish: 'Música',
@@ -9,18 +10,13 @@ const pageTitle: {[key: string]: string} = {
     french: 'Musique'
 }
 
-function shufflePlaylist(list: Song[]) {
-    const copy = [...list]
-    return copy.sort((a,b) => Math.random() - 0.5)
-}
-
 function MusicPage() {
     const selectedLang = useContext(LangContext).selectedLang
     const [trackPlaying, setTrackPlaying] = useState<Song>(musicData[selectedLang][0])
 
-    function changeTrack(track: Song) {
+    const changeTrack = useCallback((track: Song) => {
         setTrackPlaying(track)
-    }
+    }, [])
 
     useEffect(() => {
         // every time the language changes
@@ -37,7 +33,7 @@ function MusicPage() {
             <iframe src={`https://open.spotify.com/embed/track/${trackPlaying.id}?utm_source=generator`}
             className="w-full bg-black max-w-lg h-[80px] rounded-t-md"
             frameBorder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>
-            <div className="bg-white rounded-b-md w-full max-w-lg 
+            {/* <div className="bg-white rounded-b-md w-full max-w-lg 
             max-h-72 overflow-y-scroll pr-3
             scrollbar-thin scrollbar-thumb-gray-900 scrollbar-track-white">
                 {shufflePlaylist(musicData[selectedLang]).map(song => {
@@ -54,7 +50,8 @@ function MusicPage() {
                         </div>
                     )
                 })}
-            </div>
+            </div> */}
+            <Playlist onChangeTrack={changeTrack} songs={musicData[selectedLang]} />
         </div>
         <div className="w-1/2 bg-slate-50 rounded-md p-3 mdsm:w-full max-w-lg mx-auto">
             {trackPlaying.lyrics.split('|').map(line => <span key={Math.random()} className="block">{line}</span>)}
