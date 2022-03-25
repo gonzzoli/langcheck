@@ -1,4 +1,4 @@
-import { useContext, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { LangContext } from "../store/lang-context"
 import { musicData, Song } from "./music-data"
 
@@ -15,12 +15,19 @@ function shufflePlaylist(list: Song[]) {
 }
 
 function MusicPage() {
-    const [trackPlaying, setTrackPlaying] = useState<Song>(musicData.french[0])
     const selectedLang = useContext(LangContext).selectedLang
+    const [trackPlaying, setTrackPlaying] = useState<Song>(musicData[selectedLang][0])
 
     function changeTrack(track: Song) {
         setTrackPlaying(track)
     }
+
+    useEffect(() => {
+        // every time the language changes
+        // set the first song of the language as the
+        // playing song
+        setTrackPlaying(musicData[selectedLang][0])
+    }, [selectedLang])
 
     return (
 <div className="px-[3%] pb-5 ">
