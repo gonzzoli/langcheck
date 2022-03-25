@@ -17,9 +17,9 @@ import NewsTile from './NewsTile/NewsTile'
 
 const pageTitle: {[key: string]: string} = {
     spanish: 'Noticias y artículos',
-    portuguese: '',
+    portuguese: 'Notícias e Artigos',
     english: 'News and articles',
-    french: ''
+    french: 'Nouvelles et Articles'
 }
 
 const rssLinks = [
