@@ -1,4 +1,4 @@
-import { Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 import NewsPage from "./ArticlesPage/NewsPage";
 import Header from "./components/Header";
 import Sidebar from "./components/Sidebar";
@@ -24,6 +24,7 @@ const App: React.FC = () => {
               <Route element={<NotesPage />} path='/notes' />
               <Route element={<YoutubePage />} path='/videos' />
               <Route element={<MusicPage />} path='/music' />
+              <Route path='/' element={<Navigate to='/articles'/>} />
             </Routes>
         </section>
       </main>
