@@ -100,7 +100,7 @@ function NewsPage() {
             }
         }
         setLoading(true)
-
+        setFetchError(false)
         const promiseArr = endpoints.map(endpoint => getArticles(endpoint))
 
         // make all the requests and then set the articles
