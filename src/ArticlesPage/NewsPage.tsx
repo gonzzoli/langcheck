@@ -15,11 +15,23 @@ import NewsTile from './NewsTile/NewsTile'
 //     }
 // ]
 
-const pageTitle: {[key: string]: string} = {
-    spanish: 'Noticias y artículos',
-    portuguese: 'Notícias e Artigos',
-    english: 'News and articles',
-    french: 'Nouvelles et Articles'
+const pageText: {[key: string]: {title: string, error: string}} = {
+    spanish: {
+        title: 'Noticias y artículos',
+        error: 'No pudimos encontrar la informacion.'
+    },
+    portuguese: {
+        title: 'Noticias e artigos',
+        error: 'A informação não foi encontrada.'
+    },
+    english: {
+        title: 'News and articles',
+        error: 'We couldn`t find the information.'
+    },
+    french: {
+        title: 'Nouvelles et articles',
+        error: 'Nous n`avons pas pu trouver l`information.'
+    }
 }
 
 const rssLinks = [
@@ -44,7 +56,7 @@ const rssLinks = [
     {
         lang: 'french',
         links: [
-            {newspaper: 'frances', link: 'https://www.humanite.fr/rss/actu.rss'}
+            {newspaper: 'frances', link: 'https://www.mediapart.fr/articles/feed?userid=33867bcf-c0e2-4c54-ab19-65f786ea276d'}
         ]
     }
 ]
@@ -53,6 +65,7 @@ function NewsPage() {
     const [screenWidth, setScreenWidth] = useState(window.innerWidth)
     const [articles, setArticles] = useState<{newspaper: string, item: Element}[]>([])
     const [loading, setLoading] = useState(false)
+    const [fetchError, setFetchError] = useState(false)
     const langCtx = useContext(LangContext)
     
     useEffect(() => {
@@ -106,7 +119,10 @@ function NewsPage() {
             })
             setArticles(fetchedArticles)
         })
-        .catch(err => console.log(err))
+        .catch(err => {
+            setLoading(false)
+            setFetchError(true)
+        })
 
 
     }, [langCtx.selectedLang])
@@ -114,7 +130,7 @@ function NewsPage() {
     return (
     <>
         <div className="px-[3%]">
-            <h1 className="text-center text-2xl mt-5">{pageTitle[langCtx.selectedLang]}</h1>
+            <h1 className="text-center text-2xl mt-5">{pageText[langCtx.selectedLang].title}</h1>
             
             {loading  && 
             <div className="flex justify-center items-center mt-52">
@@ -125,20 +141,21 @@ function NewsPage() {
             {!loading && 
             <div className="w-full flex gap-8 px-8 mt-5
             justify-center relative">
-                {screenWidth > 764 && 
+                {fetchError && <p className='text-red-500 text-lg text-center'>{pageText[langCtx.selectedLang].error}</p>}
+                {!fetchError && screenWidth > 764 && 
                     <>
                     <NewsTile articles={articles.slice(0, 2)} />
                     <NewsTile articles={articles.slice(3, 5)} />
                     <NewsTile articles={articles.slice(6, 9)} />
                     </>
                 }
-                {(screenWidth > 550 && screenWidth <= 764) && 
+                {!fetchError && screenWidth > 550 && screenWidth <= 764 && 
                     <>
                     <NewsTile articles={articles.slice(0, 4)} />
                     <NewsTile articles={articles.slice(5, 9)} />
                     </>
                 }
-                {(screenWidth <= 550) && 
+                {!fetchError && screenWidth <= 550 && 
                     <>
                     <NewsTile articles={articles.slice(0, 9)} />
                     </>

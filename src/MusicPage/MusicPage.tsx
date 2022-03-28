@@ -14,6 +14,9 @@ function MusicPage() {
     const selectedLang = useContext(LangContext).selectedLang
     const [trackPlaying, setTrackPlaying] = useState<Song>(musicData[selectedLang][0])
 
+    // useCallback because this function is being passed to Playlist
+    // and Playlist is using React.memo to not 'scramble' the songs
+    // everytime a track is selected. 
     const changeTrack = useCallback((track: Song) => {
         setTrackPlaying(track)
     }, [])
@@ -33,24 +36,6 @@ function MusicPage() {
             <iframe src={`https://open.spotify.com/embed/track/${trackPlaying.id}?utm_source=generator`}
             className="w-full bg-black max-w-lg h-[80px] rounded-t-md"
             frameBorder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>
-            {/* <div className="bg-white rounded-b-md w-full max-w-lg 
-            max-h-72 overflow-y-scroll pr-3
-            scrollbar-thin scrollbar-thumb-gray-900 scrollbar-track-white">
-                {shufflePlaylist(musicData[selectedLang]).map(song => {
-                    return (
-                        <div
-                        key={song.id}
-                        onClick={() => {changeTrack(song)}}
-                        className="border-b-2
-                        flex justify-between items-center p-2
-                        hover:bg-slate-200 transition-all cursor-pointer">
-                            <span className="w-1/3 whitespace-nowrap overflow-hidden">{song.name}</span>
-                            <span className="w-1/3 whitespace-nowrap overflow-hidden justify-center flex">{song.artist}</span>
-                            <span className="w-1/3 whitespace-nowrap overflow-hidden flex justify-end">{song.duration}</span>
-                        </div>
-                    )
-                })}
-            </div> */}
             <Playlist onChangeTrack={changeTrack} songs={musicData[selectedLang]} />
         </div>
         <div className="w-1/2 bg-slate-50 rounded-md p-3 mdsm:w-full max-w-lg mx-auto">
