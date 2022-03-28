@@ -13,7 +13,7 @@ type Video = {
 
 const channelIds: {[key: string]: string[]} = {
     portuguese: ['UCH2VZQBLFTOp6I_qgnBJCuQ', 'UCEWHPFNilsT0IfQfutVzsag', 'UCCJ9Shh3w90o4LawLcOQ3Bg', 'UCj0O6W8yDuLg3iraAXKgCrQ', 'UCPHXtOVmjvbP9OJihsd7gCg'],
-    french: ['UCI4xp8qHD1MDErkqxb1dPbA', 'UCbj8Qov-9b5WTU1X4y7Yt-w', 'UC9n76QPNgx_C6lm8vK7ltpQ', 'UCi7MkdJLwvV99438YeUhZeg', 'UC57J0rAl1Ist28Ln2bVji0Q'],
+    french: ['UCI4xp8qHD1MDErkqxb1dPbA', 'UCbj8Qov-9b5WTU1X4y7Yt-w', 'UCww2zZWg4Cf5xcRKG-ThmXQ', 'UCi7MkdJLwvV99438YeUhZeg', 'UC57J0rAl1Ist28Ln2bVji0Q'],
     spanish: ['UCTJTpwrK4a-ajXs4-Wry09A', 'UCcjIvuxmWlS5IEQ0JdPV4Ng', 'UCouyFdE9-Lrjo3M_2idKq1A', 'UC6jNDNkoOKQfB5djK2IBDoA', 'UCECJDeK0MNapZbpaOzxrUPA'],
     english: ['UCAQg09FkoobmLquNNoO4ulg', 'UC32mYgIHS-e3C3Eyd2tRw6g', 'UCB-Ps5DdRsVAcml-Y43o7RQ', 'UCQ4zIVlfhsmvds7WuKeL2Bw', 'UCZbOmMsPgxuWmj5pGymAOnA']
 }
